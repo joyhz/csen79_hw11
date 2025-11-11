@@ -10,43 +10,46 @@
 
 namespace csen79 {
 
+template <typename T>
 class Bag {
 public:
-    using Data = int;   // create an alias for the data
     Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0) {};
 
-    // rule of 5
+    // Rule of 5
     ~Bag();
     Bag(const Bag &);
     Bag(Bag &&);
     Bag &operator=(const Bag &);
     Bag &operator=(Bag &&rhs);
 
-    // queue functions
-    void enQ(const Data &);
-    Data deQ();
+    // Queue functions
+    void enQ(const T &);
+    T deQ();
     void print() const;
 
 
-    const Data &getData(const int) const;
-    void setData(const int, const Data &);
+    const T &getData(const int) const;
+    void setData(const int, const T &);
     bool isEmpty() const;
     bool isFull() const;
     std::size_t size() const;
-    void expandCapacity(); //double size if we need to
+    void expandCapacity();     // Double capacity if needed
+
+    // Fault injection
     void setFaultInject() { inject_new_fail = true; };
     void clearFaultInject() { inject_new_fail = false; };
 
-    Data* data;
+private:
+    T* data;
     std::size_t capacity;   
     std::size_t count;     
     std::size_t front; // Keeps track of first element of the queue
     std::size_t rear; // Keeps track of last element of the queue
-
-private:
     bool inject_new_fail;
     void throwNewFailure();
 };
 
 }
+
+#include "bag.impl"    // Including the bag template implementation file
 #endif // BAG_H
