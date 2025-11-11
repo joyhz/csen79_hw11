@@ -1,6 +1,6 @@
 /*
- * Names: Yuto Fraley, Theodore Griffin - Jones, Michael Tiburcio, Joy Zhu
- * Emails: yfraley@scu.edu, tgriffinjones@scu.edu, mtiburcio@scu.edu, jhzhu@scu.edu
+ * Names: Abraham Bhatti, David Lopez-Ryan, Sebastian Ortiz Ayala, Joy Zhu
+ * Emails: abhatti@scu.edu, rlopezryan@scu.edu, sortizayala@scu.edu, jhzhu@scu.edu
  * recipe for containers using pointers
  */
 #ifndef BAG_H
