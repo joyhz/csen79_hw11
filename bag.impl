@@ -3,3 +3,42 @@
  * Emails: abhatti@scu.edu, rlopezryan@scu.edu, sortizayala@scu.edu, jhzhu@scu.edu
  * Template implementation
 */
+
+#include <iostream>
+#include <iomanip>
+#include <cstddef>
+#include <stdexcept>
+#include <string>
+#include <string.h>
+#include <new>
+
+namespace csen79 {
+
+template <typename T>
+Bag<T>::Bag(const Bag &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(false) {
+    if (capacity > 0) {
+        data = new T[capacity];
+        throwNewFailure();
+        for (std::size_t i = 0; i < count; ++i)
+            data[i] = rhs.data[(front + i) % capacity];
+    }
+}
+
+template <typename T>
+Bag<T>::~Bag() { delete[] data; }
+
+template <typename T>
+Bag<T>::Bag(Bag &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
+    rhs.data = nullptr;    // Taking care of the rhs variables after moving
+    rhs.capacity = 0;
+    rhs.count = 0;
+    rhs.front = 0;
+    rhs.rear = 0;
+}
+
+template <typename T>
+Bag<T> &Bag<T>::operator=(const Bag &rhs) {
+
+}
+
+}  // namespace csen79
