@@ -49,7 +49,7 @@ private:
     void throwNewFailure();
 };
 
-}
+}    // namespace csen79
 
 #include "bag.impl"    // Including the bag template implementation file
 #endif // BAG_H
