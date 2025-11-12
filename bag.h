@@ -13,6 +13,8 @@ namespace csen79 {
 template <typename T>
 class Bag {
 public:
+    using Data = T;
+
     Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0), inject_new_fail(false) {}
 
     // Rule of 5
@@ -24,7 +26,7 @@ public:
 
     // Queue functions
     void enQ(const T &);
-    T deQ();
+    Data deQ();
     void print() const;
 
 
@@ -40,7 +42,7 @@ public:
     void clearFaultInject() { inject_new_fail = false; };
 
 private:
-    T* data;
+    Data* data;
     std::size_t capacity;   
     std::size_t count;     
     std::size_t front; // Keeps track of first element of the queue
