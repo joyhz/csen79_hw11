@@ -130,7 +130,7 @@ void Bag<T>::enQ(const Data &d) {
     if (isFull())
         expandCapacity();
 
-    if ((data == nullptr) && (count == 0)) {
+    if ((data == nullptr)) {
         data = new Data[capacity];
         throwNewFailure();
     }
@@ -158,31 +158,9 @@ void Bag<T>::print() const {
         return;
     }
 
-    std:: << "Bag contents:" << std::endl;
+    std::cout << "Bag contents:" << std::endl;
     for (std::size_t i = 0; i < count; ++i)
-        std::cout << data[i] << std::endl;
+        std::cout << data[(front + i) % capacity] << std::endl;
 }
-
-/*
-template <typename T>
-const T Bag<T>::getData(const int idx) const {
-    if (index < 0 || static_cast<std::size_t>(index) >= count)
-        throw std::out_of_range("Invalid index");
-    return data[(front + index) % capacity];
-}
-
-template <typename T>
-void Bag<T>::setData(const int idx, const T &value) {
-    if (index < 0 || static_cast<std::size_t>(index) >= count)
-        throw std::out_of_range("Invalid index");
-    data[(front + index) % capacity] = value;
-}
-*/
-
-template <typename T>
-void Bag<T>::setFaultInject() { inject_new_fail = true; }
-
-template <typename T>
-void Bag<T>::clearFaultInject() { inject_new_fail = false; }
 
 }  // namespace csen79
