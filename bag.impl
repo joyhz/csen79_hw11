@@ -15,6 +15,10 @@
 namespace csen79 {
 
 template <typename T>
+Bag<T>::Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0) inject_new_fail(false) {}
+
+// assignment operator
+template <typename T>
 Bag<T>::Bag(const Bag &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(false) {
     if (capacity > 0) {
         data = new T[capacity];
@@ -27,6 +31,7 @@ Bag<T>::Bag(const Bag &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.co
 template <typename T>
 Bag<T>::~Bag() { delete[] data; }
 
+// move constructor
 template <typename T>
 Bag<T>::Bag(Bag &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
     rhs.data = nullptr;    // Taking care of the rhs variables after moving
@@ -36,9 +41,132 @@ Bag<T>::Bag(Bag &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count)
     rhs.rear = 0;
 }
 
+// copy constructor
 template <typename T>
 Bag<T> &Bag<T>::operator=(const Bag &rhs) {
+    if (this != &rhs) {
+        delete[] data;
+        data = nullptr;
 
+        capacity = rhs.capacity;
+        count = rhs.count;
+        front = rhs.front;
+        rear = rhs.rear;
+        inject_new_fail = rhs.inject_new_fail;
+
+        if (capacity > 0) {
+            data = new T[capacity];
+            throwNewFailure();
+            for (std::size_t i = 0; i < count; ++i)
+                data[i] = rhs.data[(front + i) % capacity];
+        }
+    }
+    return *this;
 }
+
+// move operator
+template <typename T>
+Bag<T> &Bag<T>::operator=(Bag &&rhs) {
+    if (this != &rhs) {
+        delete[] data;
+
+        data = rhs.data;
+        capacity = rhs.capacity;
+        count = rhs.count;
+        front = rhs.front;
+        rear = rhs.rear;
+        inject_new_fail = rhs.inject_new_fail;
+
+        rhs.data = nullptr;
+        rhs.capacity = 0;
+        rhs.count = 0;
+        rhs.front = 0;
+        rhs.rear = 0;
+    }
+    return *this;
+}
+
+// simple access functions
+template <typename T>
+bool Bag<T>::isEmpty() const { return count == 0; }
+
+template <typename T>
+bool Bag<T>::isFull() const { return count == capacity; }
+
+template <typename T>
+std::size_t Bag<T>::size() const { return count; }
+
+template <typename T>
+void Bag<T>::expandCapacity() {
+    std::size_t oldCap = capacity;
+    std::size_t newCapacity = (oldCap > 0) ? (oldCap * 2) : 1;
+
+    T *newData = new T[newCapacity];
+    throwNewFailure();
+
+    for (std::size_t i = 0; i < count; ++i)
+        newData[i] = data[(front + i) % oldCap];
+
+    delete[] data;
+    data = newData;
+    capacity = newCapacity;
+    front = 0;
+    rear = count;
+}
+
+template <typename T>
+void Bag<T>::enQ(const T &value) {
+    if (!data && count == 0) {
+        data = new T[capacity];
+        throwNewFailure();
+    }
+    if (isFull())
+        expandCapacity();
+
+    data[rear] = value;
+    rear = (rear + 1) % capacity;
+    ++count;
+}
+
+template <typename T>
+T Bag<T>::deQ() {
+    if (isEmpty())
+        throw std::out_of_range("Cannot dequeue from empty Bag");
+
+    T frontVal = data[front];
+    front = (front + 1) % capacity;
+    --count;
+    return frontVal;
+}
+
+template <typename T>
+void Bag<T>::print() const {
+    if (isEmpty()) {
+        std::cout << "Queue is empty\n";
+        return;
+    }
+    for (std::size_t i = 0; i < count; ++i)
+        std::cout << data[(front + i) % capacity] << '\n';
+}
+
+template <typename T>
+const T Bag<T>::getData(const int idx) const {
+    if (index < 0 || static_cast<std::size_t>(index) >= count)
+        throw std::out_of_range("Invalid index");
+    return data[(front + index) % capacity];
+}
+
+template <typename T>
+void Bag<T>::setData(const int idx, const T &value) {
+    if (index < 0 || static_cast<std::size_t>(index) >= count)
+        throw std::out_of_range("Invalid index");
+    data[(front + index) % capacity] = value;
+}
+
+template <typename T>
+void Bag<T>::setFaultInject() { inject_new_fail = true; }
+
+template <typename T>
+void Bag<T>::clearFaultInject() { inject_new_fail = false; }
 
 }  // namespace csen79
