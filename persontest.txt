@@ -1,0 +1,47 @@
+# Enqueueing all the people
+E 6058148: M Yeshaya Zavala 155.4 71.2
+E 5677961: F Hendy Clifton 175.1 58.0
+E 6250930: F Baila Olguin 197.5 63.9
+E 6072426: M Jair Atwood 229.0 69.5
+E 6409305: F Hanna Staton 173.4 63.4
+E 4353835: F Krystal Talbert 172.2 61.1
+E 6990205: F Kelly Aldridge 170.4 66.7
+E 7282032: M Bruno Conner 178.3 73.3
+E 6716962: F Arden Mullins 164.3 66.4
+E 7017117: M Anas Kaminski 167.3 68.1
+E 3108561: F Irene Ray 187.9 65.4
+E 7729459: F Ashly Tolliver 163.7 64.5
+E 3977038: M Kamren Reyna 214.1 62.8
+E 7775028: F Natalie Reaves 175.4 64.3
+E 3603367: M Maverick Kerns 206.5 65.8
+E 4293299: M Justice Willard 189.4 72.0
+E 7435498: F Nova Humphreys 173.9 64.4
+E 5191411: F Zelda Macdonald 163.3 60.8
+E 6228424: M Moishy Silverman 153.3 70.9
+E 5491600: F Chloe Fuller 168.5 64.1
+E 4671716: F Lia Maloney 159.5 62.6
+E 7118415: F Sunny Reyna 173.7 65.2
+E 6912285: M Eduardo Barreto 242.4 65.7
+E 6804978: M Ishaan Baughman 131.4 69.7
+E 4814877: M Ali Morton 112.1 65.6
+E 6996797: M Alexis Still 278.3 65.2
+E 7675163: M Zachariah Buckley 189.2 63.0
+E 3877288: F Ivy Tate 161.5 64.5
+E 3038042: F Micaela Meza 187.4 60.4
+E 7411385: M Dariel Vidal 206.5 66.4
+
+P
+
+D
+D
+D
+
+P
+
+E 5312606: M Gregory Toney 259.9 71.6
+E 4172583: M Mohamed Barclay 205.7 65.9
+E 6197176: M Hugo Temple 248.2 69.1
+
+P
+
+Q
