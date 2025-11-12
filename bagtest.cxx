@@ -18,62 +18,44 @@ using namespace csen79;
 // Added fault injection flag commands SET_FAULT, CLEAR_FAULT
 enum Command { ENQ = 'E', DEQ = 'D', PRINT = 'P', QUIT = 'Q', SET_FAULT = 'S', CLEAR_FAULT = 'C'};
 
-int main(int argc, char *argv[]) {
-    Bag<Person> bag;    // template parameter is Person from the csen79 namespace
+template <typename T>
+void runBagTest(istream &input) {
+    Bag<T> bag;     // template parameter T can be anything
     string line;
     bool quit = false;
 
-    istream *input;     // Pointer to input stream
-    ifstream inputFile;
-    if (argc == 1) {
-        cout << "No file provided, reading from standard input." << endl;
-        input = &cin;   // input points to standard input
-    }
-    else {
-        inputFile.open(argv[1]);
-        cout << "Reading from file: " << argv[1] << endl;
-        if (!inputFile) {
-            cerr << "Error opening file: " << argv[1] << endl;
-            exit(1);
-        }
-        input = &inputFile; // input points to the file stream
-    }
-    
-    while (!quit && getline(*input, line)) {
-        if (line.empty()) 
-            continue;   // skip empty lines
+    while (!quit && getline(input, line)) {
+        if (line.empty()) continue;
+
         switch (line[0]) {
             case ENQ: {
                 try {
                     stringstream ss(line.substr(1));
-                    Person per;
-                    ss >> per;
-                    bag.enQ(per);
-                    cout << "Queued: " << per << endl;
+                    T value;
+                    ss >> value;   // Works for any data type
+                    bag.enQ(value);
+                    cout << "Queued: " << value << endl;
                 } catch (const out_of_range &e) {
-                    cerr << "Data out of range in enQ: " << e.what() << endl;
+                    cout << "Data out of range in enQ: " << e.what() << endl;
                 } catch (const bad_alloc &e) {
-                    cerr << "Memory allocation error - new failed: " << e.what() << endl;
+                    cout << "Memory allocation error - new failed: " << e.what() << endl;
                 }
             }
                 break;
             case DEQ: {
                 try {
-                    Person per = bag.deQ();
-                    cout << "Dequeued: " << per << endl;
+                    T value = bag.deQ();
+                    cout << "Dequeued: " << value << endl;
                 } catch (const out_of_range &e) {
-                    cerr << "Data out of range in deQ: " << e.what() << endl;
+                    cout << "Data out of range in deQ: " << e.what() << endl;
                 }
             }
                 break;
             case PRINT: {
-                cout << "Bag contents: " << endl;
+                cout << "Bag contents:" << endl;
                 bag.print();
                 cout << "Current size: " << bag.size() << endl;
             }
-                break;
-            case QUIT:
-                quit = true;
                 break;
             case SET_FAULT: {
                 cout << "Set fault inject flag to true" << endl;
@@ -85,10 +67,38 @@ int main(int argc, char *argv[]) {
                 bag.clearFaultInject();
             }
                 break;
+            case QUIT:
+                quit = true;
+                break;
             default:
-                cerr << "Unknown command: " << line << endl;
+                cout << "Unknown command: " << line << endl;
                 break;
         }
     }
-    return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        cout << "Cmd line format: ./bagtest <type> <filename>\n";
+        return 1;
+    }
+
+    string type = argv[1];
+    ifstream inputFile(argv[2]);
+    if (!inputFile) {
+        cout << "Cannot open file: " << argv[2] << endl;
+        return 1;
+    }
+
+    // Specifically just for testing with int or Person, but could be changed to work with any data type
+    if (type == "int") {
+        runBagTest<int>(inputFile);
+    } else if (type == "Person") {
+        runBagTest<Person>(inputFile);
+    } else {
+        cout << "Unknown type: " << type << endl;
+        return 1;
+    }
+
+    return 0;
 }
