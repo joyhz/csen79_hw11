@@ -14,7 +14,6 @@ template <typename T>
 class Bag {
 public:
     using Data = T;
-
     Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0), inject_new_fail(false) {}
 
     // Rule of 5
@@ -41,14 +40,14 @@ public:
     void setFaultInject() { inject_new_fail = true; };
     void clearFaultInject() { inject_new_fail = false; };
 
-private:
     Data* data;
     std::size_t capacity;   
     std::size_t count;     
     std::size_t front; // Keeps track of first element of the queue
     std::size_t rear; // Keeps track of last element of the queue
-    bool inject_new_fail;
 
+private:
+    bool inject_new_fail;
     void throwNewFailure();
 };
 
