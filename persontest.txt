@@ -1,4 +1,3 @@
-# Enqueueing all the people
 E 6058148: M Yeshaya Zavala 155.4 71.2
 E 5677961: F Hendy Clifton 175.1 58.0
 E 6250930: F Baila Olguin 197.5 63.9
