@@ -13,7 +13,7 @@ namespace csen79 {
 template <typename T>
 class Bag {
 public:
-    Bag();
+    Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0), inject_new_fail(false) {}
 
     // Rule of 5
     ~Bag();
@@ -28,14 +28,14 @@ public:
     void print() const;
 
 
-    const T &getData(const int) const;
-    void setData(const int, const T &);
+    //const T &getData(const int) const;
+    //void setData(const int, const T &);
     bool isEmpty() const;
     bool isFull() const;
     std::size_t size() const;
     void expandCapacity();     // Double capacity if needed
 
-    // Fault injection
+    // Fault injection from HW 5, bag pointer implementation
     void setFaultInject() { inject_new_fail = true; };
     void clearFaultInject() { inject_new_fail = false; };
 
