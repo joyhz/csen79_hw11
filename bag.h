@@ -46,6 +46,7 @@ private:
     std::size_t front; // Keeps track of first element of the queue
     std::size_t rear; // Keeps track of last element of the queue
     bool inject_new_fail;
+
     void throwNewFailure();
 };
 
