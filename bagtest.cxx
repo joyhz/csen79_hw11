@@ -10,18 +10,20 @@
 #include <sstream>
 #include <stdexcept>
 #include "bag.h"
+#include "person.h"
 
 using namespace std;
 using namespace csen79;
+
 // Added fault injection flag commands SET_FAULT, CLEAR_FAULT
 enum Command { ENQ = 'E', DEQ = 'D', PRINT = 'P', QUIT = 'Q', SET_FAULT = 'S', CLEAR_FAULT = 'C'};
 
 int main(int argc, char *argv[]) {
-    Bag bag;
+    Bag<Person> bag;    // template parameter is Person from the csen79 namespace
     string line;
     bool quit = false;
 
-    istream *input; // Pointer to input stream
+    istream *input;     // Pointer to input stream
     ifstream inputFile;
     if (argc == 1) {
         cout << "No file provided, reading from standard input." << endl;
@@ -37,28 +39,28 @@ int main(int argc, char *argv[]) {
         input = &inputFile; // input points to the file stream
     }
     
-    while (!quit && getline(*input,line)) {
+    while (!quit && getline(*input, line)) {
         if (line.empty()) 
             continue;   // skip empty lines
         switch (line[0]) {
             case ENQ: {
-                int data;
                 try {
                     stringstream ss(line.substr(1));
-                    ss >> data;
-                    bag.enQ(data);
-                    cout << "Queued: " << data << endl;
+                    Person per;
+                    ss >> per;
+                    bag.enQ(per);
+                    cout << "Queued: " << per << endl;
                 } catch (const out_of_range &e) {
-                    cerr << "Data out of range" << endl;
+                    cerr << "Data out of range in enQ: " << e.what() << endl;
                 } catch (const bad_alloc &e) {
-                    cerr << "Memory allocation error - new failed" << endl;
+                    cerr << "Memory allocation error - new failed: " << e.what() << endl;
                 }
             }
                 break;
             case DEQ: {
                 try {
-                    int data = bag.deQ();
-                    cout << "Dequeued: " << data << endl;
+                    Person per = bag.deQ();
+                    cout << "Dequeued: " << per << endl;
                 } catch (const out_of_range &e) {
                     cerr << "Data out of range in deQ: " << e.what() << endl;
                 }
