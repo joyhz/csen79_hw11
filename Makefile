@@ -3,12 +3,13 @@
 CXX=c++
 OPT=-g
 STD=-std=c++20
-CXXFLAGS=$(OPT) $(STD)
+WARN=-Wall
+CXXFLAGS=$(OPT) $(STD) $(WARN)
 
 %.o:	%.cxx
 	$(CXX) -c $(CXXFLAGS) $<
 
-SRCS=bag.cxx bagtest.cxx
+SRCS=bagtest.cxx person.cxx
 OBJS=$(SRCS:.cxx=.o)
 
 all: bag
@@ -28,5 +29,5 @@ depend: $(SRCS)
 	/bin/mv -f $$TMP Makefile
 
 # DEPENDENTS
-bag.o: bag.cxx bag.h
-bagtest.o: bagtest.cxx bag.h
+bagtest.o: bagtest.cxx bag.h person.h
+person.o: person.cxx person.h
