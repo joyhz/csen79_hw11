@@ -14,12 +14,9 @@
 
 namespace csen79 {
 
+// copy constructor
 template <typename T>
-Bag<T>::Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0) inject_new_fail(false) {}
-
-// assignment operator
-template <typename T>
-Bag<T>::Bag(const Bag &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(false) {
+Bag<T>::Bag(const Bag<T> &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
     if (capacity > 0) {
         data = new T[capacity];
         throwNewFailure();
@@ -28,12 +25,13 @@ Bag<T>::Bag(const Bag &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.co
     }
 }
 
+// destructor
 template <typename T>
 Bag<T>::~Bag() { delete[] data; }
 
 // move constructor
 template <typename T>
-Bag<T>::Bag(Bag &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
+Bag<T>::Bag(Bag<T> &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
     rhs.data = nullptr;    // Taking care of the rhs variables after moving
     rhs.capacity = 0;
     rhs.count = 0;
@@ -41,12 +39,16 @@ Bag<T>::Bag(Bag &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count)
     rhs.rear = 0;
 }
 
-// copy constructor
+// copy operator
 template <typename T>
-Bag<T> &Bag<T>::operator=(const Bag &rhs) {
+Bag<T> &Bag<T>::operator=(const Bag<T> &rhs) {
     if (this != &rhs) {
         delete[] data;
         data = nullptr;
+        capacity = 0;
+        count = 0;
+        front = 0;
+        rear = 0;
 
         capacity = rhs.capacity;
         count = rhs.count;
@@ -54,7 +56,11 @@ Bag<T> &Bag<T>::operator=(const Bag &rhs) {
         rear = rhs.rear;
         inject_new_fail = rhs.inject_new_fail;
 
-        if (capacity > 0) {
+        if (rhs.capacity > 0) {
+            capacity = rhs.capacity;
+            count = rhs.count;
+            front = rhs.front;
+            rear = rhs.rear;
             data = new T[capacity];
             throwNewFailure();
             for (std::size_t i = 0; i < count; ++i)
@@ -66,7 +72,7 @@ Bag<T> &Bag<T>::operator=(const Bag &rhs) {
 
 // move operator
 template <typename T>
-Bag<T> &Bag<T>::operator=(Bag &&rhs) {
+Bag<T> &Bag<T>::operator=(Bag<T> &&rhs) {
     if (this != &rhs) {
         delete[] data;
 
@@ -84,6 +90,16 @@ Bag<T> &Bag<T>::operator=(Bag &&rhs) {
         rhs.rear = 0;
     }
     return *this;
+}
+
+// for simulating allocation failure
+template <typename T>
+void Bag<T>::throwNewFailure() {
+    if (inject_new_fail) {
+        delete[] data;
+        data = nullptr;
+        throw std::bad_alloc();
+    }
 }
 
 // simple access functions
@@ -115,15 +131,15 @@ void Bag<T>::expandCapacity() {
 }
 
 template <typename T>
-void Bag<T>::enQ(const T &value) {
-    if (!data && count == 0) {
+void Bag<T>::enQ(const T &d) {
+    if ((data == nullptr) && (count == 0)) {
         data = new T[capacity];
         throwNewFailure();
     }
     if (isFull())
         expandCapacity();
 
-    data[rear] = value;
+    data[rear] = d;
     rear = (rear + 1) % capacity;
     ++count;
 }
@@ -142,13 +158,16 @@ T Bag<T>::deQ() {
 template <typename T>
 void Bag<T>::print() const {
     if (isEmpty()) {
-        std::cout << "Queue is empty\n";
+        std::cout << "Bag is empty" << std::endl;
         return;
     }
+
+    std:: << "Bag contents:" << std::endl;
     for (std::size_t i = 0; i < count; ++i)
-        std::cout << data[(front + i) % capacity] << '\n';
+        std::cout << data[i] << std::endl;
 }
 
+/*
 template <typename T>
 const T Bag<T>::getData(const int idx) const {
     if (index < 0 || static_cast<std::size_t>(index) >= count)
@@ -162,6 +181,7 @@ void Bag<T>::setData(const int idx, const T &value) {
         throw std::out_of_range("Invalid index");
     data[(front + index) % capacity] = value;
 }
+*/
 
 template <typename T>
 void Bag<T>::setFaultInject() { inject_new_fail = true; }
