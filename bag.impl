@@ -130,7 +130,7 @@ void Bag<T>::enQ(const Data &d) {
     if (isFull())
         expandCapacity();
 
-    if ((data == nullptr)) {
+    if (data == nullptr) {
         data = new Data[capacity];
         throwNewFailure();
     }
