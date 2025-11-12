@@ -158,7 +158,6 @@ void Bag<T>::print() const {
         return;
     }
 
-    std::cout << "Bag contents:" << std::endl;
     for (std::size_t i = 0; i < count; ++i)
         std::cout << data[(front + i) % capacity] << std::endl;
 }
