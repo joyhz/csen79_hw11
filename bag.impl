@@ -16,9 +16,9 @@ namespace csen79 {
 
 // copy constructor
 template <typename T>
-Bag<T>::Bag(const Bag<T> &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
+Bag<T>::Bag(const Bag &rhs): data(nullptr), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
     if (capacity > 0) {
-        data = new T[capacity];
+        data = new Data[capacity];
         throwNewFailure();
         for (std::size_t i = 0; i < count; ++i)
             data[i] = rhs.data[(front + i) % capacity];
@@ -31,7 +31,7 @@ Bag<T>::~Bag() { delete[] data; }
 
 // move constructor
 template <typename T>
-Bag<T>::Bag(Bag<T> &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
+Bag<T>::Bag(Bag &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.count), front(rhs.front), rear(rhs.rear), inject_new_fail(rhs.inject_new_fail) {
     rhs.data = nullptr;    // Taking care of the rhs variables after moving
     rhs.capacity = 0;
     rhs.count = 0;
@@ -41,7 +41,7 @@ Bag<T>::Bag(Bag<T> &&rhs): data(rhs.data), capacity(rhs.capacity), count(rhs.cou
 
 // copy operator
 template <typename T>
-Bag<T> &Bag<T>::operator=(const Bag<T> &rhs) {
+Bag<T> &Bag<T>::operator=(const Bag &rhs) {
     if (this != &rhs) {
         delete[] data;
         data = nullptr;
@@ -50,18 +50,12 @@ Bag<T> &Bag<T>::operator=(const Bag<T> &rhs) {
         front = 0;
         rear = 0;
 
-        capacity = rhs.capacity;
-        count = rhs.count;
-        front = rhs.front;
-        rear = rhs.rear;
-        inject_new_fail = rhs.inject_new_fail;
-
         if (rhs.capacity > 0) {
             capacity = rhs.capacity;
             count = rhs.count;
             front = rhs.front;
             rear = rhs.rear;
-            data = new T[capacity];
+            data = new Data[capacity];
             throwNewFailure();
             for (std::size_t i = 0; i < count; ++i)
                 data[i] = rhs.data[(front + i) % capacity];
@@ -72,7 +66,7 @@ Bag<T> &Bag<T>::operator=(const Bag<T> &rhs) {
 
 // move operator
 template <typename T>
-Bag<T> &Bag<T>::operator=(Bag<T> &&rhs) {
+Bag<T> &Bag<T>::operator=(Bag &&rhs) {
     if (this != &rhs) {
         delete[] data;
 
@@ -88,6 +82,7 @@ Bag<T> &Bag<T>::operator=(Bag<T> &&rhs) {
         rhs.count = 0;
         rhs.front = 0;
         rhs.rear = 0;
+        rhs.inject_new_fail = false;
     }
     return *this;
 }
@@ -117,7 +112,7 @@ void Bag<T>::expandCapacity() {
     std::size_t oldCap = capacity;
     std::size_t newCapacity = (oldCap > 0) ? (oldCap * 2) : 1;
 
-    T *newData = new T[newCapacity];
+    Data *newData = new Data[newCapacity];
     throwNewFailure();
 
     for (std::size_t i = 0; i < count; ++i)
@@ -131,13 +126,14 @@ void Bag<T>::expandCapacity() {
 }
 
 template <typename T>
-void Bag<T>::enQ(const T &d) {
-    if ((data == nullptr) && (count == 0)) {
-        data = new T[capacity];
-        throwNewFailure();
-    }
+void Bag<T>::enQ(const Data &d) {
     if (isFull())
         expandCapacity();
+
+    if ((data == nullptr) && (count == 0)) {
+        data = new Data[capacity];
+        throwNewFailure();
+    }
 
     data[rear] = d;
     rear = (rear + 1) % capacity;
@@ -145,11 +141,11 @@ void Bag<T>::enQ(const T &d) {
 }
 
 template <typename T>
-T Bag<T>::deQ() {
+typename Bag<T>::Data Bag<T>::deQ() {
     if (isEmpty())
         throw std::out_of_range("Cannot dequeue from empty Bag");
 
-    T frontVal = data[front];
+    Data frontVal = data[front];
     front = (front + 1) % capacity;
     --count;
     return frontVal;
