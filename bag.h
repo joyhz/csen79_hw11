@@ -13,7 +13,7 @@ namespace csen79 {
 template <typename T>
 class Bag {
 public:
-    Bag(): data(nullptr), capacity(10), count(0), front(0), rear(0) {};
+    Bag();
 
     // Rule of 5
     ~Bag();
